@@ -6,6 +6,14 @@
   <title>CS2 Item ID Dictionary</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/src/styles/main.css">
+  <script>
+    (function(){
+      var K='steam-toolbox-lang',L='en',P=new URLSearchParams(location.search).get('lang');
+      if(P==='zh'||P==='en'){L=P;try{localStorage.setItem(K,L)}catch(e){}}
+      else{try{var s=localStorage.getItem(K);if(s==='zh'||'en')L=s}catch(e){}if(L==='en'&&navigator.language.toLowerCase().startsWith('zh'))L='zh'}
+      document.documentElement.lang=L;
+    })();
+  </script>
   <style>
     .app { height: 100vh; display: grid; grid-template-rows: auto auto 1fr; overflow: hidden; }
     .page-header {
@@ -289,7 +297,7 @@
     .toast.show { opacity: 1; transform: translateY(0); }
   </style>
 </head>
-<body>
+<body style="visibility:hidden">
 <nav class="site-nav" style="background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 0 26px; display: flex; align-items: center; justify-content: space-between; height: 52px;">
   <a href="/" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); font-weight: 700; font-size: 15px;">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="var(--steam-accent)"/></svg>
@@ -528,6 +536,11 @@ print(by_buff_id.get("34123"))</code></pre>
   const clean = v => v === undefined || v === null ? '' : String(v);
   const esc = s => clean(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
   const escAttr = s => esc(s).replace(/'/g, '&#39;');
+  function tf(key, vars) {
+    let s = t(key);
+    if (vars) Object.entries(vars).forEach(([k, v]) => { s = s.replace('{' + k + '}', v); });
+    return s;
+  }
 
   function showProgress(show, pct = 0) {
     els.progress.style.display = show ? 'block' : 'none';
@@ -584,14 +597,14 @@ print(by_buff_id.get("34123"))</code></pre>
 
   async function fetchJsonWithTimeout(url, timeoutMs, requestId) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(new Error('Timeout ' + Math.round(timeoutMs / 1000) + 's')), timeoutMs);
+    const timer = setTimeout(() => controller.abort(new Error('Timeout')), timeoutMs);
     try {
       const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
       if (requestId !== state.loadRequestId) throw new Error('Superseded');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return await res.json();
     } catch (err) {
-      if (err && err.name === 'AbortError') throw new Error('Timeout ' + Math.round(timeoutMs / 1000) + 's');
+      if (err && err.name === 'AbortError') throw new Error('Timeout');
       throw err;
     } finally {
       clearTimeout(timer);
@@ -604,17 +617,17 @@ print(by_buff_id.get("34123"))</code></pre>
     const timeoutMs = 30000;
 
     showProgress(true, 10);
-    setLoadingVisual(true, retryCount ? `Retry #${retryCount}...` : t('cs2_items.loading_hint'));
-    els.loadTitle.textContent = retryCount ? 'Retrying...' : t('cs2_items.loading');
+    setLoadingVisual(true, retryCount ? tf('cs2_items.retry_count', {count: retryCount}) : t('cs2_items.loading_hint'));
+    els.loadTitle.textContent = retryCount ? t('cs2_items.retrying') : t('cs2_items.loading');
     els.empty.style.display = 'flex';
-    els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>${retryCount ? `Retry #${retryCount}...` : t('cs2_items.loading_dict')}</strong><span>${t('cs2_items.retry_hint')}</span></div>`;
+    els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>${retryCount ? tf('cs2_items.retry_count', {count: retryCount}) : t('cs2_items.loading_dict')}</strong><span>${t('cs2_items.retry_hint')}</span></div>`;
     els.table.style.display = 'none';
 
     try {
       const root = await fetchJsonWithTimeout(CACHE_URL, timeoutMs, requestId);
       if (requestId !== state.loadRequestId) return;
       showProgress(true, 70);
-      setLoadingVisual(true, 'Parsing data...');
+      setLoadingVisual(true, t('cs2_items.parsing'));
       const items = extractItems(root);
       state.raw = items;
       state.rows = items.map(normalizeItem);
@@ -628,9 +641,9 @@ print(by_buff_id.get("34123"))</code></pre>
       state.sortKey = '';
       state.sortDir = 'asc';
       showProgress(false);
-      setLoadingVisual(false, `${fmtInt(state.rows.length)} items loaded.`);
-      els.loadTitle.textContent = 'Loaded';
-      setStatus(`Loaded: <b class="good">${fmtInt(state.rows.length)}</b> items.`);
+      setLoadingVisual(false, tf('cs2_items.loaded_items', {count: fmtInt(state.rows.length)}));
+      els.loadTitle.textContent = t('cs2_items.loaded');
+      setStatus(tf('cs2_items.loaded_status', {count: fmtInt(state.rows.length)}));
       els.empty.style.display = 'none';
       els.table.style.display = 'table';
       updateStats();
@@ -642,9 +655,9 @@ print(by_buff_id.get("34123"))</code></pre>
       const shouldRetry = message.includes('Timeout') || message.includes('timeout');
       if (shouldRetry) {
         showProgress(true, 15);
-        els.loadTitle.textContent = 'Timeout, retrying...';
-        setLoadingVisual(true, `Retry #${retryCount + 1}...`);
-        els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>Timeout</strong><span>Retry #${retryCount + 1}...</span></div>`;
+        els.loadTitle.textContent = t('cs2_items.timeout_retry');
+        setLoadingVisual(true, tf('cs2_items.retry_count', {count: retryCount + 1}));
+        els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>${t('cs2_items.timeout')}</strong><span>${tf('cs2_items.retry_count', {count: retryCount + 1})}</span></div>`;
         setTimeout(() => {
           if (requestId === state.loadRequestId) loadData({ retryCount: retryCount + 1 });
         }, 600);
@@ -652,10 +665,10 @@ print(by_buff_id.get("34123"))</code></pre>
       }
       showProgress(false);
       setLoadingVisual(false, message);
-      els.loadTitle.textContent = 'Failed';
-      setStatus('Failed: ' + esc(message), 'bad');
+      els.loadTitle.textContent = t('cs2_items.failed');
+      setStatus(t('cs2_items.failed') + ': ' + esc(message), 'bad');
       els.empty.style.display = 'flex';
-      els.empty.textContent = 'Load failed. Check cache URL or browser console.';
+      els.empty.textContent = t('cs2_items.failed_hint');
     }
   }
 
@@ -703,7 +716,7 @@ print(by_buff_id.get("34123"))</code></pre>
       els.viewport.scrollTop = 0;
       updateStats();
       requestRender(true);
-      setStatus(`${fmtInt(state.filtered.length)} / ${fmtInt(state.rows.length)} items.`);
+      setStatus(tf('cs2_items.items_status', {filtered: fmtInt(state.filtered.length), total: fmtInt(state.rows.length)}));
     };
     if (immediate) run();
     else state.filterTimer = setTimeout(run, 150);
@@ -791,7 +804,7 @@ print(by_buff_id.get("34123"))</code></pre>
   }
 
   function exportCsv() {
-    if (!state.filtered.length) return toast('No results to export');
+    if (!state.filtered.length) return toast(t('cs2_items.no_export'));
     const header = columns.map(c => csvCell(t(c.labelKey))).join(',');
     const lines = [header];
     for (const idx of state.filtered) {

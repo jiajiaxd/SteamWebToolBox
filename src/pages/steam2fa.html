@@ -6,8 +6,16 @@
   <title>Steam TOTP Generator</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/src/styles/main.css">
+  <script>
+    (function(){
+      var K='steam-toolbox-lang',L='en',P=new URLSearchParams(location.search).get('lang');
+      if(P==='zh'||P==='en'){L=P;try{localStorage.setItem(K,L)}catch(e){}}
+      else{try{var s=localStorage.getItem(K);if(s==='zh'||'en')L=s}catch(e){}if(L==='en'&&navigator.language.toLowerCase().startsWith('zh'))L='zh'}
+      document.documentElement.lang=L;
+    })();
+  </script>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col" style="visibility:hidden">
   <header class="header-gradient">
     <nav class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
       <a href="/" class="text-xl font-bold flex items-center gap-2" style="color: var(--text)">

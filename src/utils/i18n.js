@@ -4,13 +4,16 @@ import zh from '../i18n/zh.json';
 const LANG_KEY = 'steam-toolbox-lang';
 const translations = { en, zh };
 
-function detectLanguage() {
-  const saved = localStorage.getItem(LANG_KEY);
-  if (saved && translations[saved]) return saved;
-
+export function detectLanguage() {
   const params = new URLSearchParams(window.location.search);
   const langParam = params.get('lang');
-  if (langParam && translations[langParam]) return langParam;
+  if (langParam && translations[langParam]) {
+    localStorage.setItem(LANG_KEY, langParam);
+    return langParam;
+  }
+
+  const saved = localStorage.getItem(LANG_KEY);
+  if (saved && translations[saved]) return saved;
 
   const browserLang = navigator.language.toLowerCase();
   if (browserLang.startsWith('zh')) return 'zh';
@@ -68,4 +71,5 @@ export function applyTranslations() {
 export function initI18n() {
   document.documentElement.lang = currentLang;
   applyTranslations();
+  document.body.style.visibility = '';
 }
