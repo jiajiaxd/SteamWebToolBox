@@ -4,6 +4,10 @@ A collection of free, open-source Steam tools. All calculations are performed lo
 
 **[中文文档](./README.zh-CN.md)**
 
+## Online Demo
+
+Try it live: [https://steamtools.jiajiaxd.com/](https://steamtools.jiajiaxd.com/)
+
 ## Features
 
 - **Steam TOTP Generator** — Generate Steam Guard Mobile Authenticator codes. Supports drag & drop `.maFile` import.
@@ -31,18 +35,6 @@ npm run build
 # Preview production build
 npm run preview
 ```
-
-## Deploy to Cloudflare Pages
-
-1. Push this repository to GitHub
-2. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/?to=/:account/workers-and-pages) > **Workers & Pages** > **Create application** > **Pages**
-3. Connect your GitHub repository
-4. Configure build settings:
-   - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-5. Click **Save and Deploy**
-
-Every push to the repository will automatically trigger a new deployment.
 
 ## Privacy
 

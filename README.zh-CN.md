@@ -4,6 +4,10 @@
 
 **[English](./README.md)**
 
+## 在线体验
+
+在线体验地址：[https://steamtools.jiajiaxd.com/](https://steamtools.jiajiaxd.com/)
+
 ## 功能
 
 - **Steam TOTP 验证码生成器** — 生成 Steam 手机令牌验证码，支持拖拽 `.maFile` 文件导入。
@@ -31,18 +35,6 @@ npm run build
 # 预览生产构建
 npm run preview
 ```
-
-## 部署到 Cloudflare Pages
-
-1. 将此仓库推送到 GitHub
-2. 前往 [Cloudflare 控制台](https://dash.cloudflare.com/?to=/:account/workers-and-pages) > **Workers & Pages** > **Create application** > **Pages**
-3. 连接你的 GitHub 仓库
-4. 配置构建设置：
-   - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-5. 点击 **Save and Deploy**
-
-每次推送到仓库都会自动触发新的部署。
 
 ## 隐私
 
