@@ -2,8 +2,10 @@ import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 export default defineConfig({
-  plugins: [tailwindcss()],
+  plugins: [tailwindcss(), cloudflare()],
   build: {
     rollupOptions: {
       input: {
