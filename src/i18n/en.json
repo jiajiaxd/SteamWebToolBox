@@ -1,0 +1,67 @@
+{
+  "site": {
+    "title": "Steam Web Toolbox",
+    "description": "A collection of useful Steam tools",
+    "language": "Language",
+    "english": "English",
+    "chinese": "中文",
+    "home": "Home",
+    "github": "GitHub"
+  },
+  "home": {
+    "hero_title": "Steam Web Toolbox",
+    "hero_desc": "Free, open-source Steam tools. All calculations are done locally in your browser, no data is uploaded.",
+    "tools_title": "Tools",
+    "steam2fa": {
+      "title": "Steam TOTP Generator",
+      "desc": "Generate Steam Mobile Authenticator codes. Drag and drop .maFile or enter shared_secret manually.",
+      "tag": "Security"
+    },
+    "cs2_items": {
+      "title": "CS2 Item ID Dictionary",
+      "desc": "Lookup CS2 item IDs across BUFF, C5, YOUPIN, HALOSKINS and more platforms.",
+      "tag": "Trading"
+    }
+  },
+  "steam2fa": {
+    "title": "Steam TOTP Generator",
+    "subtitle": "Generate Steam Guard Mobile Authenticator codes",
+    "input_label": "Shared Secret (Base64)",
+    "input_placeholder": "Enter your shared_secret or drag .maFile here",
+    "generate": "Generate Code",
+    "code_label": "Current Code",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "time_remaining": "Time Remaining",
+    "drag_hint": "Drag and drop .maFile here to auto-extract shared_secret",
+    "security_note": "All calculations are performed locally in your browser. No data is uploaded to any server.",
+    "error_empty": "Please enter a valid shared_secret",
+    "error_invalid": "Invalid shared_secret format"
+  },
+  "cs2_items": {
+    "title": "CS2 Item ID Dictionary",
+    "subtitle": "Lookup CS2 item IDs across trading platforms",
+    "search_placeholder": "Search items... (space for multiple keywords)",
+    "filter_all": "All",
+    "loading": "Loading data...",
+    "error_load": "Failed to load data, retrying...",
+    "no_results": "No items found",
+    "total_items": "Total Items",
+    "filtered_items": "Filtered",
+    "copy_success": "Copied to clipboard",
+    "export_csv": "Export CSV",
+    "columns": {
+      "name": "Name",
+      "hashname": "Steam Hashname",
+      "buff_id": "BUFF ID",
+      "c5_id": "C5 ID",
+      "youpin_id": "YOUPIN ID",
+      "haloskins_id": "HALOSKINS ID"
+    }
+  },
+  "footer": {
+    "copyright": "Steam Web Toolbox",
+    "open_source": "Open Source",
+    "privacy": "Privacy: All calculations are done locally"
+  }
+}

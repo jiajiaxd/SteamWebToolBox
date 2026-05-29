@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS2 Item ID Dictionary</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <style>
+    .table-container { overflow: auto; max-height: calc(100vh - 300px); }
+    table { border-collapse: separate; border-spacing: 0; width: 100%; }
+    th { position: sticky; top: 0; z-index: 5; background: #1b2838; color: #8f98a0; font-weight: 600; font-size: 12px; text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(102, 192, 244, 0.2); cursor: pointer; white-space: nowrap; user-select: none; }
+    th:hover { color: #66c0f4; }
+    td { height: 42px; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #c7d5e0; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    tbody tr:hover td { background: rgba(102, 192, 244, 0.1); }
+    .copy-cell { cursor: pointer; background: transparent; border: none; color: inherit; padding: 0; text-align: left; font: inherit; }
+    .copy-cell:hover { color: #66c0f4; text-decoration: underline; }
+    .chip { display: inline-block; border: 1px solid rgba(102, 192, 244, 0.3); background: transparent; color: #8f98a0; border-radius: 999px; padding: 4px 10px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+    .chip:hover { border-color: #66c0f4; color: #66c0f4; }
+    .stat-card { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 12px; }
+    .stat-label { font-size: 12px; color: #8f98a0; margin-bottom: 4px; }
+    .stat-value { font-size: 20px; font-weight: 700; color: #66c0f4; }
+    .loading-spinner { width: 40px; height: 40px; border: 4px solid rgba(102, 192, 244, 0.2); border-top-color: #66c0f4; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="header-gradient border-b border-white/10">
+    <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl font-bold text-white flex items-center gap-2">
+        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#66c0f4"/>
+        </svg>
+        <span data-i18n="site.title">Steam Web Toolbox</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <button id="lang-toggle" class="flex items-center gap-2 px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+            </svg>
+            <span id="current-lang">English</span>
+          </button>
+          <div id="lang-menu" class="hidden absolute right-0 mt-2 w-32 bg-[#1b2838] border border-white/10 rounded-md shadow-lg z-50">
+            <a href="?lang=en" class="block px-4 py-2 text-sm hover:bg-white/10 rounded-t-md" data-lang="en">English</a>
+            <a href="?lang=zh" class="block px-4 py-2 text-sm hover:bg-white/10 rounded-b-md" data-lang="zh">中文</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-white" data-i18n="cs2_items.title">CS2 Item ID Dictionary</h1>
+      <p class="text-gray-400 mt-1" data-i18n="cs2_items.subtitle">Lookup CS2 item IDs across trading platforms</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="cs2_items.total_items">Total Items</div>
+        <div class="stat-value" id="totalCount">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" data-i18n="cs2_items.filtered_items">Filtered</div>
+        <div class="stat-value" id="resultCount">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">BUFF ID</div>
+        <div class="stat-value" id="buffCount">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">C5 ID</div>
+        <div class="stat-value" id="c5Count">0</div>
+      </div>
+    </div>
+
+    <div class="card p-4 mb-4">
+      <div class="flex flex-col md:flex-row gap-4">
+        <input id="search" class="input-field flex-1" data-i18n-placeholder="cs2_items.search_placeholder" placeholder="Search items... (space for multiple keywords)" autocomplete="off">
+        <select id="platformFilter" class="input-field w-full md:w-48">
+          <option value="all" data-i18n="cs2_items.filter_all">All</option>
+          <option value="BUFF">BUFF</option>
+          <option value="C5">C5</option>
+          <option value="YOUPIN">YOUPIN</option>
+          <option value="HALOSKINS">HALOSKINS</option>
+        </select>
+        <button id="exportBtn" class="btn-primary whitespace-nowrap" data-i18n="cs2_items.export_csv">Export CSV</button>
+      </div>
+      <div class="flex flex-wrap gap-2 mt-3">
+        <button class="chip" data-q="AK-47">AK-47</button>
+        <button class="chip" data-q="AWP">AWP</button>
+        <button class="chip" data-q="M4A1-S">M4A1-S</button>
+        <button class="chip" data-q="StatTrak">StatTrak</button>
+        <button class="chip" data-q="Sticker">Sticker</button>
+        <button class="chip" data-q="Case">Case</button>
+      </div>
+    </div>
+
+    <div class="card overflow-hidden">
+      <div id="loading" class="flex flex-col items-center justify-center py-16">
+        <div class="loading-spinner mb-4"></div>
+        <p class="text-gray-400" data-i18n="cs2_items.loading">Loading data...</p>
+      </div>
+      <div id="tableWrapper" class="table-container" style="display:none">
+        <table>
+          <thead><tr id="headRow"></tr></thead>
+          <tbody id="bodyRows"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="hidden text-center py-16 text-gray-400" data-i18n="cs2_items.no_results">No items found</div>
+    </div>
+  </main>
+
+  <footer class="border-t border-white/10 py-6">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+      <span data-i18n="footer.copyright">Steam Web Toolbox</span>
+      <span>Data: SteamDT Open Platform</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast"></div>
+
+  <script type="module">
+    import { initI18n, getLang, t } from '/src/utils/i18n.js';
+
+    initI18n();
+
+    const langToggle = document.getElementById('lang-toggle');
+    const langMenu = document.getElementById('lang-menu');
+    const currentLangEl = document.getElementById('current-lang');
+    currentLangEl.textContent = getLang() === 'zh' ? '中文' : 'English';
+
+    langToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langMenu.classList.toggle('hidden');
+    });
+    document.addEventListener('click', () => langMenu.classList.add('hidden'));
+
+    const CACHE_URL = 'https://steamauto.jiajiaxd.com/file/cache?key=cs2_base_info';
+    const ROW_H = 42;
+    const BUFFER = 18;
+
+    const columns = [
+      { key: 'name', labelKey: 'cs2_items.columns.name', width: 280 },
+      { key: 'marketHashName', labelKey: 'cs2_items.columns.hashname', width: 350 },
+      { key: 'BUFF', labelKey: 'cs2_items.columns.buff_id', width: 100 },
+      { key: 'C5', labelKey: 'cs2_items.columns.c5_id', width: 90 },
+      { key: 'YOUPIN', labelKey: 'cs2_items.columns.youpin_id', width: 100 },
+      { key: 'HALOSKINS', labelKey: 'cs2_items.columns.haloskins_id', width: 120 }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const els = {
+      search: $('search'), platformFilter: $('platformFilter'), exportBtn: $('exportBtn'),
+      totalCount: $('totalCount'), resultCount: $('resultCount'), buffCount: $('buffCount'), c5Count: $('c5Count'),
+      loading: $('loading'), tableWrapper: $('tableWrapper'), emptyState: $('emptyState'),
+      headRow: $('headRow'), bodyRows: $('bodyRows'), toast: $('toast')
+    };
+
+    const state = { raw: [], rows: [], filtered: [], sortKey: '', sortDir: 'asc', filterTimer: null, pendingRender: 0, loadRequestId: 0 };
+
+    const fmtInt = n => Number(n || 0).toLocaleString();
+    const clean = v => v === undefined || v === null ? '' : String(v);
+    const esc = s => clean(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
+    const escAttr = s => esc(s).replace(/'/g, '&#39;');
+
+    function toast(text) {
+      els.toast.textContent = text;
+      els.toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => els.toast.classList.remove('show'), 1200);
+    }
+
+    function normalizeItem(item, index) {
+      const platformMap = {};
+      const list = item.platformList || item.platform_list || item.platforms || [];
+      for (const p of list) {
+        const platform = clean(p.name || p.platform || p.platformName).toUpperCase();
+        const id = clean(p.itemId || p.item_id || p.id || p.goods_id);
+        if (platform && id) platformMap[platform] = id;
+      }
+      return {
+        index, name: clean(item.name || item.zh_name || item.cn_name),
+        marketHashName: clean(item.marketHashName || item.market_hash_name || item.hashName),
+        BUFF: platformMap.BUFF || '', C5: platformMap.C5 || '',
+        YOUPIN: platformMap.YOUPIN || '', HALOSKINS: platformMap.HALOSKINS || '',
+        _search: [item.name, item.marketHashName, ...Object.values(platformMap)].join(' ').toLowerCase()
+      };
+    }
+
+    async function loadData() {
+      const requestId = ++state.loadRequestId;
+      els.loading.style.display = 'flex';
+      els.tableWrapper.style.display = 'none';
+      els.emptyState.classList.add('hidden');
+
+      try {
+        const res = await fetch(CACHE_URL, { cache: 'no-store' });
+        if (requestId !== state.loadRequestId) return;
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const root = await res.json();
+        const items = Array.isArray(root) ? root : (root.data || root.items || []);
+        state.raw = items;
+        state.rows = items.map(normalizeItem);
+        state.filtered = state.rows.map((_, i) => i);
+        state.sortKey = '';
+        state.sortDir = 'asc';
+        els.loading.style.display = 'none';
+        els.tableWrapper.style.display = 'block';
+        updateStats();
+        renderHeader();
+        applyFilters(true);
+      } catch (err) {
+        if (requestId !== state.loadRequestId) return;
+        els.loading.innerHTML = `<p class="text-red-400">${esc(err.message)}</p>`;
+      }
+    }
+
+    function updateStats() {
+      els.totalCount.textContent = fmtInt(state.rows.length);
+      els.resultCount.textContent = fmtInt(state.filtered.length);
+      els.buffCount.textContent = fmtInt(state.rows.filter(r => r.BUFF).length);
+      els.c5Count.textContent = fmtInt(state.rows.filter(r => r.C5).length);
+    }
+
+    function renderHeader() {
+      els.headRow.innerHTML = '';
+      for (const col of columns) {
+        const th = document.createElement('th');
+        th.textContent = t(col.labelKey) + (state.sortKey === col.key ? (state.sortDir === 'desc' ? ' ↓' : ' ↑') : '');
+        th.style.width = col.width + 'px';
+        th.addEventListener('click', () => sortBy(col.key));
+        els.headRow.appendChild(th);
+      }
+    }
+
+    function applyFilters(immediate = false) {
+      clearTimeout(state.filterTimer);
+      const run = () => {
+        const q = els.search.value.trim().toLowerCase();
+        const terms = q ? q.split(/\s+/).filter(Boolean) : [];
+        const platform = els.platformFilter.value;
+        const out = [];
+        for (let i = 0; i < state.rows.length; i++) {
+          const r = state.rows[i];
+          if (platform !== 'all' && !r[platform]) continue;
+          if (terms.length && !terms.every(t => r._search.includes(t))) continue;
+          out.push(i);
+        }
+        state.filtered = out;
+        if (state.sortKey) sortFiltered(false);
+        els.tableWrapper.scrollTop = 0;
+        updateStats();
+        requestRender(true);
+        els.emptyState.classList.toggle('hidden', out.length > 0);
+      };
+      if (immediate) run(); else state.filterTimer = setTimeout(run, 150);
+    }
+
+    function sortBy(key) {
+      if (!state.rows.length) return;
+      state.sortKey = state.sortKey === key ? key : key;
+      state.sortDir = state.sortKey === key ? (state.sortDir === 'asc' ? 'desc' : 'asc') : 'asc';
+      sortFiltered(true);
+      renderHeader();
+      requestRender(true);
+    }
+
+    function sortFiltered() {
+      const key = state.sortKey, dir = state.sortDir === 'desc' ? -1 : 1;
+      state.filtered.sort((a, b) => {
+        const va = state.rows[a][key], vb = state.rows[b][key];
+        const ea = !va, eb = !vb;
+        if (ea && eb) return 0;
+        if (ea) return 1;
+        if (eb) return -1;
+        const na = Number(va), nb = Number(vb);
+        if (Number.isFinite(na) && Number.isFinite(nb)) return (na - nb) * dir;
+        return String(va).localeCompare(String(vb)) * dir;
+      });
+    }
+
+    function requestRender(force = false) {
+      state.pendingRender++;
+      const id = state.pendingRender;
+      requestAnimationFrame(() => { if (id === state.pendingRender) renderRows(); });
+    }
+
+    function renderRows() {
+      const total = state.filtered.length;
+      const top = els.tableWrapper.scrollTop || 0;
+      const height = els.tableWrapper.clientHeight || 500;
+      const start = Math.max(0, Math.floor(top / ROW_H) - BUFFER);
+      const count = Math.ceil(height / ROW_H) + BUFFER * 2;
+      const end = Math.min(total, start + count);
+      const html = [];
+      html.push(`<tr><td style="height:${start * ROW_H}px" colspan="${columns.length}"></td></tr>`);
+      for (let i = start; i < end; i++) {
+        const row = state.rows[state.filtered[i]];
+        html.push('<tr>');
+        for (const col of columns) {
+          const val = row[col.key];
+          html.push(`<td style="width:${col.width}px" title="${escAttr(val)}"><button class="copy-cell" data-copy="${escAttr(val)}">${esc(val) || '-'}</button></td>`);
+        }
+        html.push('</tr>');
+      }
+      html.push(`<tr><td style="height:${Math.max(0, (total - end)) * ROW_H}px" colspan="${columns.length}"></td></tr>`);
+      els.bodyRows.innerHTML = html.join('');
+    }
+
+    function exportCsv() {
+      if (!state.filtered.length) return;
+      const header = columns.map(c => `"${t(c.labelKey)}"`).join(',');
+      const lines = [header];
+      for (const idx of state.filtered) {
+        const r = state.rows[idx];
+        lines.push(columns.map(c => { const v = clean(r[c.key]); return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; }).join(','));
+      }
+      const blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'cs2-items-' + new Date().toISOString().slice(0, 10) + '.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    els.search.addEventListener('input', () => applyFilters(false));
+    els.platformFilter.addEventListener('change', () => applyFilters(true));
+    els.exportBtn.addEventListener('click', exportCsv);
+    els.bodyRows.addEventListener('click', e => {
+      const btn = e.target.closest('.copy-cell');
+      if (btn) {
+        navigator.clipboard.writeText(btn.dataset.copy || btn.textContent).then(() => toast(t('cs2_items.copy_success')));
+      }
+    });
+    document.querySelectorAll('.chip[data-q]').forEach(btn => {
+      btn.addEventListener('click', () => { els.search.value = btn.dataset.q; applyFilters(true); });
+    });
+    els.tableWrapper.addEventListener('scroll', () => requestRender(false));
+    window.addEventListener('resize', () => requestRender(true));
+
+    loadData();
+  </script>
+</body>
+</html>

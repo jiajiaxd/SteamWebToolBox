@@ -1,0 +1,67 @@
+{
+  "site": {
+    "title": "Steam 在线工具箱",
+    "description": "实用的 Steam 在线工具集合",
+    "language": "语言",
+    "english": "English",
+    "chinese": "中文",
+    "home": "首页",
+    "github": "GitHub"
+  },
+  "home": {
+    "hero_title": "Steam 在线工具箱",
+    "hero_desc": "免费、开源的 Steam 工具集。所有计算均在浏览器本地完成，不上传任何数据。",
+    "tools_title": "工具列表",
+    "steam2fa": {
+      "title": "Steam TOTP 验证码生成器",
+      "desc": "生成 Steam 手机令牌验证码。支持拖拽 .maFile 文件或手动输入 shared_secret。",
+      "tag": "安全"
+    },
+    "cs2_items": {
+      "title": "CS2 物品 ID 字典",
+      "desc": "查询 CS2 物品在 BUFF、C5、YOUPIN、HALOSKINS 等平台的 ID。",
+      "tag": "交易"
+    }
+  },
+  "steam2fa": {
+    "title": "Steam TOTP 验证码生成器",
+    "subtitle": "生成 Steam Guard 手机令牌验证码",
+    "input_label": "Shared Secret (Base64)",
+    "input_placeholder": "输入 shared_secret 或拖拽 .maFile 文件到此处",
+    "generate": "生成验证码",
+    "code_label": "当前验证码",
+    "copy": "复制",
+    "copied": "已复制！",
+    "time_remaining": "剩余时间",
+    "drag_hint": "拖拽 .maFile 文件到此处可自动提取 shared_secret",
+    "security_note": "所有计算均在浏览器本地完成，不会上传任何数据到服务器。",
+    "error_empty": "请输入有效的 shared_secret",
+    "error_invalid": "shared_secret 格式无效"
+  },
+  "cs2_items": {
+    "title": "CS2 物品 ID 字典",
+    "subtitle": "查询 CS2 物品在各交易平台的 ID",
+    "search_placeholder": "搜索物品...（空格分隔多个关键词）",
+    "filter_all": "全部",
+    "loading": "加载数据中...",
+    "error_load": "数据加载失败，正在重试...",
+    "no_results": "未找到匹配的物品",
+    "total_items": "总物品数",
+    "filtered_items": "筛选结果",
+    "copy_success": "已复制到剪贴板",
+    "export_csv": "导出 CSV",
+    "columns": {
+      "name": "名称",
+      "hashname": "Steam Hashname",
+      "buff_id": "BUFF ID",
+      "c5_id": "C5 ID",
+      "youpin_id": "YOUPIN ID",
+      "haloskins_id": "HALOSKINS ID"
+    }
+  },
+  "footer": {
+    "copyright": "Steam 在线工具箱",
+    "open_source": "开源项目",
+    "privacy": "隐私保护：所有计算均在本地完成"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "steam-web-toolbox",
+  "version": "1.0.0",
+  "description": "Steam Web Toolbox - A collection of useful Steam tools",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0"
+  }
+}
