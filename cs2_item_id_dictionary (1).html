@@ -1,52 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CS2 Item ID Dictionary</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/src/styles/main.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CS2 物品常用 ID 字典</title>
   <style>
-    .app { height: 100vh; display: grid; grid-template-rows: auto auto 1fr; overflow: hidden; }
-    .page-header {
+    :root {
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --card-2: #f9fbff;
+      --text: #172033;
+      --muted: #64748b;
+      --line: #dbe4f0;
+      --line-2: #e8eef7;
+      --brand: #2563eb;
+      --brand-2: #0ea5e9;
+      --green: #059669;
+      --yellow: #d97706;
+      --red: #dc2626;
+      --shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+      --row-h: 42px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, rgba(37, 99, 235, .10), transparent 26rem), var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+    button, input, select { font: inherit; }
+    .app { height: 100vh; display: grid; grid-template-rows: auto auto 1fr; }
+    header {
       padding: 22px 26px 16px;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 18px;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, .78);
+      border-bottom: 1px solid var(--line-2);
+      backdrop-filter: blur(14px);
     }
-    .page-header h1 { margin: 0; font-size: 22px; letter-spacing: .2px; color: var(--text); }
-    .sub { margin-top: 6px; color: var(--text-muted); font-size: 13px; line-height: 1.55; }
+    h1 { margin: 0; font-size: 22px; letter-spacing: .2px; }
+    .sub { margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.55; }
     .top-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .btn {
-      border: 1px solid var(--border);
-      background: var(--bg);
+      border: 1px solid var(--line);
+      background: #fff;
       color: var(--text);
       border-radius: 12px;
       padding: 9px 13px;
       cursor: pointer;
       white-space: nowrap;
-      font-size: 13px;
-      transition: all 0.2s;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, .03);
     }
-    .btn:hover { border-color: var(--steam-accent); color: var(--steam-accent); }
-    .btn.primary { background: var(--steam-accent); color: white; border-color: transparent; }
-    .btn.primary:hover { filter: brightness(.9); color: white; }
-    .btn.ghost { background: transparent; border-color: transparent; }
+    .btn:hover { border-color: rgba(37, 99, 235, .55); color: var(--brand); }
+    .btn.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: white; border-color: transparent; }
+    .btn.primary:hover { color: white; filter: brightness(.98); }
+    .btn.ghost { background: transparent; box-shadow: none; }
     .toolbar {
       padding: 14px 26px;
       display: grid;
-      grid-template-columns: 1fr 180px auto;
+      grid-template-columns: minmax(320px, 1.4fr) 180px auto;
       gap: 10px;
       align-items: center;
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, .54);
+      border-bottom: 1px solid var(--line-2);
     }
     @media (max-width: 1100px) {
-      .app { height: auto; min-height: 100vh; grid-template-rows: auto auto auto; overflow: auto; }
-      .page-header { flex-direction: column; }
+      body { overflow: auto; height: auto; }
+      .app { min-height: 100vh; height: auto; grid-template-rows: auto auto auto; }
+      header { flex-direction: column; }
       .top-actions { justify-content: flex-start; }
       .toolbar { grid-template-columns: 1fr 1fr; }
       .main { grid-template-columns: 1fr !important; }
@@ -54,27 +79,30 @@
     }
     .field, .select {
       width: 100%;
-      border: 1px solid var(--border);
-      background: var(--bg);
+      border: 1px solid var(--line);
+      background: #fff;
       color: var(--text);
       border-radius: 12px;
       padding: 11px 12px;
       outline: none;
-      font-size: 13px;
-      transition: border-color 0.2s;
+      box-shadow: 0 1px 0 rgba(15, 23, 42, .03);
     }
-    .field:focus, .select:focus { border-color: var(--steam-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--steam-accent) 15%, transparent); }
+    .field:focus, .select:focus {
+      border-color: rgba(37, 99, 235, .72);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .10);
+    }
     .main {
       min-height: 0;
       padding: 18px 26px 26px;
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: 290px minmax(0, 1fr);
       gap: 16px;
     }
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid var(--line-2);
       border-radius: 18px;
+      box-shadow: var(--shadow);
       overflow: hidden;
       min-height: 0;
     }
@@ -82,7 +110,7 @@
     .side h2 {
       margin: 15px 0 8px;
       font-size: 12px;
-      color: var(--text-muted);
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: .08em;
     }
@@ -91,48 +119,32 @@
       grid-template-columns: 1fr auto;
       gap: 10px;
       padding: 9px 0;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--line-2);
       font-size: 13px;
     }
-    .metric span:first-child { color: var(--text-muted); }
-    .metric b { color: var(--text); font-variant-numeric: tabular-nums; }
+    .metric span:first-child { color: var(--muted); }
+    .metric b { font-variant-numeric: tabular-nums; }
     .status-box {
       border-radius: 16px;
       padding: 14px;
-      background: color-mix(in srgb, var(--steam-accent) 8%, transparent);
-      border: 1px solid color-mix(in srgb, var(--steam-accent) 16%, transparent);
-      color: var(--text-muted);
+      background: linear-gradient(135deg, rgba(37, 99, 235, .08), rgba(14, 165, 233, .08));
+      border: 1px solid rgba(37, 99, 235, .16);
+      color: var(--muted);
       font-size: 13px;
       line-height: 1.55;
     }
     .status-box strong { display: block; color: var(--text); margin-bottom: 4px; }
-    .source-note {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--steam-green) 15%, transparent);
-      border: 1px solid color-mix(in srgb, var(--steam-green) 30%, transparent);
-      color: var(--steam-green);
-      font-size: 12px;
-      font-weight: 600;
-    }
     .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
     .chip {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text-muted);
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
       border-radius: 999px;
       padding: 5px 8px;
       font-size: 12px;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .chip:hover { border-color: var(--steam-accent); color: var(--steam-accent); }
-    .hint { color: var(--text-muted); line-height: 1.55; font-size: 12px; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 12px; }
+    .hint { color: var(--muted); line-height: 1.55; font-size: 12px; }
     .table-card { display: grid; grid-template-rows: auto 1fr auto; min-width: 0; }
     .table-top {
       display: flex;
@@ -140,45 +152,43 @@
       justify-content: space-between;
       gap: 12px;
       padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
+      border-bottom: 1px solid var(--line-2);
+      background: var(--card-2);
     }
-    .status { color: var(--text-muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .good { color: var(--steam-green); }
-    .bad { color: #dc2626; }
-    .warn { color: var(--steam-gold); }
-    .progress { height: 5px; width: 190px; border-radius: 999px; background: var(--border); overflow: hidden; display: none; }
-    .progress > div { height: 100%; width: 0%; background: var(--steam-accent); transition: width .18s ease; }
-    .viewport { overflow: auto; min-height: 0; background: var(--bg); }
+    .status { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .progress { height: 5px; width: 190px; border-radius: 999px; background: var(--line-2); overflow: hidden; display: none; }
+    .progress > div { height: 100%; width: 0%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); transition: width .18s ease; }
+    .viewport { overflow: auto; min-height: 0; background: #fff; }
     table { border-collapse: separate; border-spacing: 0; width: max-content; min-width: 100%; table-layout: fixed; }
     thead { position: sticky; top: 0; z-index: 5; }
     th {
-      background: var(--bg-card);
-      color: var(--text-muted);
+      background: #f1f5fb;
+      color: #334155;
       font-weight: 700;
       font-size: 12px;
       text-align: left;
       padding: 11px 10px;
-      border-bottom: 1px solid var(--border);
-      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line-2);
       cursor: pointer;
       white-space: nowrap;
       user-select: none;
     }
-    th:hover { color: var(--steam-accent); }
+    th:hover { color: var(--brand); background: #eaf2ff; }
     td {
-      height: 42px;
+      height: var(--row-h);
       padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      border-right: 1px solid var(--border);
-      color: var(--text);
+      border-bottom: 1px solid var(--line-2);
+      border-right: 1px solid #f0f4fa;
+      color: #1e293b;
       font-size: 13px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      background: var(--bg);
+      background: #fff;
     }
-    tbody tr:hover td { background: color-mix(in srgb, var(--steam-accent) 8%, var(--bg)); }
+    tbody tr:nth-child(2n) td { background: #fbfdff; }
+    tbody tr:hover td { background: #eff6ff; }
     .spacer td { padding: 0; border: 0; height: 0; }
     .copy {
       display: inline-flex;
@@ -191,10 +201,8 @@
       padding: 0;
       cursor: pointer;
       text-align: left;
-      font: inherit;
-      font-size: 13px;
     }
-    .copy:hover { color: var(--steam-accent); text-decoration: underline; }
+    .copy:hover { color: var(--brand); text-decoration: underline; }
     .empty {
       height: 100%;
       min-height: 320px;
@@ -202,7 +210,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: var(--text-muted);
+      color: var(--muted);
       padding: 30px;
     }
     .foot {
@@ -211,26 +219,29 @@
       justify-content: space-between;
       gap: 10px;
       padding: 11px 14px;
-      border-top: 1px solid var(--border);
-      color: var(--text-muted);
+      border-top: 1px solid var(--line-2);
+      color: var(--muted);
       font-size: 12px;
-      background: var(--bg-card);
+      background: var(--card-2);
     }
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      border: 3px solid var(--border);
-      border-top-color: var(--steam-accent);
-      animation: spin .82s linear infinite;
-      flex: 0 0 auto;
-    }
-    .spinner.large { width: 34px; height: 34px; border-width: 4px; margin: 0 auto 12px; }
-    .loading-empty { display: grid; place-items: center; gap: 8px; }
-    .loading-empty strong { color: var(--text); }
-    .loading-line { display: flex; align-items: center; gap: 9px; color: var(--text-muted); font-size: 13px; line-height: 1.55; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .good { color: var(--green); }
+    .bad { color: var(--red); }
+    .warn { color: var(--yellow); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
+    .source-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+      color: #047857;
+      font-size: 12px;
+      font-weight: 600;
+    }
     .modal-mask {
       position: fixed;
       inset: 0;
@@ -239,7 +250,7 @@
       align-items: center;
       justify-content: center;
       padding: 22px;
-      background: rgba(0, 0, 0, .42);
+      background: rgba(15, 23, 42, .42);
       backdrop-filter: blur(6px);
     }
     .modal-mask.show { display: flex; }
@@ -248,8 +259,9 @@
       max-height: 88vh;
       overflow: hidden;
       border-radius: 18px;
-      background: var(--bg);
-      border: 1px solid var(--border);
+      background: #fff;
+      border: 1px solid var(--line-2);
+      box-shadow: 0 22px 60px rgba(15, 23, 42, .22);
       display: grid;
       grid-template-rows: auto 1fr;
     }
@@ -259,42 +271,72 @@
       justify-content: space-between;
       gap: 14px;
       padding: 15px 18px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
+      border-bottom: 1px solid var(--line-2);
+      background: #f8fbff;
     }
-    .modal-head h3 { margin: 0; font-size: 16px; color: var(--text); }
+    .modal-head h3 { margin: 0; font-size: 16px; }
     .modal-body {
       overflow: auto;
       padding: 18px;
-      color: var(--text);
+      color: #1e293b;
       line-height: 1.65;
       font-size: 14px;
     }
-    .modal-body h4 { margin: 18px 0 8px; font-size: 15px; color: var(--text); }
+    .modal-body h4 { margin: 18px 0 8px; font-size: 15px; }
     .modal-body h4:first-child { margin-top: 0; }
     .modal-body code, .modal-body pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
     .modal-body pre {
       margin: 10px 0;
       padding: 12px 14px;
       border-radius: 14px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: #f8fafc;
+      border: 1px solid var(--line-2);
       overflow: auto;
       white-space: pre;
-      font-size: 13px;
     }
     .modal-body table { width: 100%; border-collapse: collapse; min-width: 0; }
     .modal-body th, .modal-body td {
       height: auto;
-      background: var(--bg);
-      border: 1px solid var(--border);
+      background: #fff;
+      border: 1px solid var(--line-2);
       padding: 8px 10px;
       white-space: normal;
-      color: var(--text);
+      color: #1e293b;
       font-size: 13px;
       cursor: default;
     }
-    .modal-body th { background: var(--bg-card); font-weight: 600; }
+    .modal-body th { background: #f1f5fb; }
+
+    .loading-line {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 3px solid #dbeafe;
+      border-top-color: var(--brand);
+      animation: spin .82s linear infinite;
+      flex: 0 0 auto;
+    }
+    .spinner.large {
+      width: 34px;
+      height: 34px;
+      border-width: 4px;
+      margin: 0 auto 12px;
+    }
+    .loading-empty {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+    }
+    .loading-empty strong { color: var(--text); }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .toast {
       position: fixed;
@@ -304,6 +346,7 @@
       border-radius: 12px;
       background: #172033;
       color: white;
+      box-shadow: var(--shadow);
       opacity: 0;
       transform: translateY(8px);
       pointer-events: none;
@@ -316,52 +359,52 @@
 </head>
 <body>
 <div class="app">
-  <header class="page-header">
+  <header>
     <div>
-      <h1 data-i18n="cs2_items.title">CS2 Item ID Dictionary</h1>
-      <div class="sub" data-i18n="cs2_items.subtitle">Auto-loads cs2_base_info cache for quick lookup of item names, Hashnames, and BUFF / C5 / YOUPIN / HALOSKINS platform IDs.</div>
-      <div class="source-note">Data: SteamDT Open Platform</div>
+      <h1>CS2 物品常用 ID 字典</h1>
+      <div class="sub">自动加载 <span class="mono">cs2_base_info</span> 缓存，用于快速查询物品中文名、Hashname、BUFF / C5 / YOUPIN / HALOSKINS 等平台 ID。</div>
+      <div class="source-note">数据来源：SteamDT 开放平台</div>
     </div>
     <div class="top-actions">
-      <button class="btn primary" id="reloadBtn" data-i18n="cs2_items.reload">Reload</button>
-      <button class="btn" id="docBtn" data-i18n="cs2_items.data_format">Data Format</button>
-      <button class="btn" id="exportBtn" data-i18n="cs2_items.export_csv">Export CSV</button>
+      <button class="btn primary" id="reloadBtn">重新加载</button>
+      <button class="btn" id="docBtn">数据格式说明</button>
+      <button class="btn" id="exportBtn">导出当前结果 CSV</button>
     </div>
   </header>
 
   <section class="toolbar">
-    <input id="search" class="field" data-i18n-placeholder="cs2_items.search_placeholder" placeholder="Search name / Hashname / platform ID..." autocomplete="off" />
+    <input id="search" class="field" placeholder="搜索中文名 / Hashname / 任意平台 ID，例如 火神 vulcan 33975" autocomplete="off" />
     <select id="platformFilter" class="select">
-      <option value="all" data-i18n="cs2_items.filter_all">All Platforms</option>
-      <option value="BUFF">BUFF</option>
-      <option value="C5">C5</option>
-      <option value="YOUPIN">YOUPIN</option>
-      <option value="HALOSKINS">HALOSKINS</option>
+      <option value="all">全部平台</option>
+      <option value="BUFF">有 BUFF ID</option>
+      <option value="C5">有 C5 ID</option>
+      <option value="YOUPIN">有 YOUPIN ID</option>
+      <option value="HALOSKINS">有 HALOSKINS ID</option>
     </select>
-    <button class="btn ghost" id="resetBtn" data-i18n="cs2_items.reset">Reset</button>
+    <button class="btn ghost" id="resetBtn">重置筛选</button>
   </section>
 
   <main class="main">
     <aside class="card side">
       <div class="status-box">
-        <strong id="loadTitle" data-i18n="cs2_items.loading">Loading data</strong>
+        <strong id="loadTitle">正在加载数据</strong>
         <div id="loadingIndicator" class="loading-line">
           <span class="spinner" aria-hidden="true"></span>
-          <span id="loadingText" data-i18n="cs2_items.loading_hint">Auto-fetches remote cache on page load.</span>
+          <span id="loadingText">页面打开后会自动请求远程缓存。</span>
         </div>
-        <div id="loadDesc" style="display:none"></div>
+        <div id="loadDesc" style="display:none">页面打开后会自动请求远程缓存。</div>
       </div>
 
-      <h2 data-i18n="cs2_items.data_overview">Data Overview</h2>
-      <div class="metric"><span data-i18n="cs2_items.total_items">Total Items</span><b id="totalCount">0</b></div>
-      <div class="metric"><span data-i18n="cs2_items.filtered_items">Current Results</span><b id="resultCount">0</b></div>
+      <h2>数据概览</h2>
+      <div class="metric"><span>总物品数</span><b id="totalCount">0</b></div>
+      <div class="metric"><span>当前结果</span><b id="resultCount">0</b></div>
       <div class="metric"><span>BUFF ID</span><b id="buffCount">0</b></div>
       <div class="metric"><span>C5 ID</span><b id="c5Count">0</b></div>
       <div class="metric"><span>YOUPIN ID</span><b id="youpinCount">0</b></div>
       <div class="metric"><span>HALOSKINS ID</span><b id="haloCount">0</b></div>
-      <div class="metric"><span data-i18n="cs2_items.sort_field">Sort Field</span><b id="sortInfo">-</b></div>
+      <div class="metric"><span>排序字段</span><b id="sortInfo">无</b></div>
 
-      <h2 data-i18n="cs2_items.quick_actions">Quick Actions</h2>
+      <h2>快捷操作</h2>
       <div class="chips">
         <button class="chip" data-q="AK-47">AK-47</button>
         <button class="chip" data-q="AWP">AWP</button>
@@ -369,22 +412,25 @@
         <button class="chip" data-q="StatTrak">StatTrak</button>
         <button class="chip" data-q="Sticker">Sticker</button>
         <button class="chip" data-q="Case">Case</button>
+        <button class="chip" data-q="钥匙">钥匙</button>
       </div>
 
-      <h2 data-i18n="cs2_items.help">Help</h2>
-      <div class="hint" data-i18n="cs2_items.help_text">Search supports space-separated keywords. All keywords must match. Click any cell to copy. Click column headers to sort.</div>
+      <h2>说明</h2>
+      <div class="hint">
+        搜索支持空格分词，所有关键词都命中才显示。点击任意表格内容可复制该单元格文本；表头可排序。数据来源于 SteamDT 开放平台，页面固定读取远程缓存链接，不提供手动上传入口。
+      </div>
     </aside>
 
     <section class="card table-card">
       <div class="table-top">
-        <div class="status" id="status" data-i18n="cs2_items.ready">Ready to load remote cache.</div>
+        <div class="status" id="status">准备加载远程缓存。</div>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="progress" id="progress"><div id="progressBar"></div></div>
-          <button class="btn" id="fitBtn" data-i18n="cs2_items.refresh_view">Refresh View</button>
+          <button class="btn" id="fitBtn">刷新视图</button>
         </div>
       </div>
       <div class="viewport" id="viewport">
-        <div class="empty" id="empty"><div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong data-i18n="cs2_items.loading_dict">Loading item dictionary...</strong><span data-i18n="cs2_items.retry_hint">Auto-retry if over 30 seconds.</span></div></div>
+        <div class="empty" id="empty"><div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>正在加载物品字典数据...</strong><span>如果超过 30 秒未完成，页面会自动重试。</span></div></div>
         <table id="table" style="display:none">
           <thead><tr id="headRow"></tr></thead>
           <tbody id="bodyRows"></tbody>
@@ -392,43 +438,43 @@
       </div>
       <div class="foot">
         <span id="rangeInfo">-</span>
-        <span>Data: SteamDT Open Platform | Cache: <span class="mono">steamauto.jiajiaxd.com/file/cache?key=cs2_base_info</span></span>
+        <span>数据来源：SteamDT 开放平台；缓存链接：<span class="mono">https://steamauto.jiajiaxd.com/file/cache?key=cs2_base_info</span></span>
       </div>
     </section>
   </main>
 </div>
-<div class="toast" id="toast">Copied</div>
+<div class="toast" id="toast">已复制</div>
 
 <div class="modal-mask" id="docModal" role="dialog" aria-modal="true" aria-labelledby="docTitle">
   <div class="modal">
     <div class="modal-head">
-      <h3 id="docTitle" data-i18n="cs2_items.doc_title">cs2_base_info Cache Data Format</h3>
-      <button class="btn" id="closeDocModal" data-i18n="cs2_items.close">Close</button>
+      <h3 id="docTitle">cs2_base_info 缓存数据说明</h3>
+      <button class="btn" id="closeDocModal">关闭</button>
     </div>
     <div class="modal-body">
-      <h4 data-i18n="cs2_items.doc_source_title">Data Source</h4>
-      <p data-i18n="cs2_items.doc_source_desc">Data is from <strong>SteamDT Open Platform</strong>. The page reads a pre-cached CS2 item info dataset.</p>
+      <h4>数据来源</h4>
+      <p>本页展示的数据来源于 <strong>SteamDT 开放平台</strong>，当前网页会读取已经缓存好的 CS2 物品基础信息。</p>
 
-      <h4 data-i18n="cs2_items.doc_cache_url">Cache URL</h4>
+      <h4>缓存地址</h4>
       <pre><code>https://steamauto.jiajiaxd.com/file/cache?key=cs2_base_info</code></pre>
 
-      <h4 data-i18n="cs2_items.doc_json_structure">Top-level JSON Structure</h4>
+      <h4>顶层 JSON 结构</h4>
       <pre><code>{
   "success": true,
   "data": []
 }</code></pre>
 
       <table>
-        <thead><tr><th data-i18n="cs2_items.doc_field">Field</th><th data-i18n="cs2_items.doc_type">Type</th><th data-i18n="cs2_items.doc_desc">Description</th></tr></thead>
+        <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
         <tbody>
-          <tr><td><code>success</code></td><td>boolean</td><td data-i18n="cs2_items.doc_success_desc">Whether the request/cache read was successful.</td></tr>
-          <tr><td><code>data</code></td><td>array</td><td data-i18n="cs2_items.doc_data_desc">Array of item info objects, each representing a CS2 item.</td></tr>
+          <tr><td><code>success</code></td><td>boolean</td><td>请求或缓存读取是否成功。</td></tr>
+          <tr><td><code>data</code></td><td>array</td><td>物品基础信息数组，每一项代表一个 CS2 物品。</td></tr>
         </tbody>
       </table>
 
-      <h4 data-i18n="cs2_items.doc_item_structure">data[] Item Structure</h4>
+      <h4>data 数组元素结构</h4>
       <pre><code>{
-  "name": "AWP | Pit Viper (Minimal Wear)",
+  "name": "AWP | 响尾蛇 (略有磨损)",
   "marketHashName": "AWP | Pit Viper (Minimal Wear)",
   "platformList": [
     { "name": "BUFF", "itemId": "34123" },
@@ -439,17 +485,17 @@
 }</code></pre>
 
       <table>
-        <thead><tr><th data-i18n="cs2_items.doc_field">Field</th><th data-i18n="cs2_items.doc_type">Type</th><th data-i18n="cs2_items.doc_desc">Description</th></tr></thead>
+        <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
         <tbody>
-          <tr><td><code>name</code></td><td>string</td><td data-i18n="cs2_items.doc_name_desc">Item name (Chinese).</td></tr>
-          <tr><td><code>marketHashName</code></td><td>string</td><td data-i18n="cs2_items.doc_hashname_desc">Steam market Hashname, usable for matching with Steam / BUFF market data.</td></tr>
-          <tr><td><code>platformList</code></td><td>array</td><td data-i18n="cs2_items.doc_platform_desc">Platform ID mapping list.</td></tr>
-          <tr><td><code>platformList[].name</code></td><td>string</td><td data-i18n="cs2_items.doc_platform_name">Platform name, e.g. <code>BUFF</code>, <code>C5</code>, <code>YOUPIN</code>, <code>HALOSKINS</code>.</td></tr>
-          <tr><td><code>platformList[].itemId</code></td><td>string</td><td data-i18n="cs2_items.doc_platform_id">Item ID on the corresponding platform.</td></tr>
+          <tr><td><code>name</code></td><td>string</td><td>物品中文名。</td></tr>
+          <tr><td><code>marketHashName</code></td><td>string</td><td>Steam 市场 Hashname，可用于和 Steam / BUFF 等市场数据匹配。</td></tr>
+          <tr><td><code>platformList</code></td><td>array</td><td>各平台的物品 ID 映射列表。</td></tr>
+          <tr><td><code>platformList[].name</code></td><td>string</td><td>平台名称，例如 <code>BUFF</code>、<code>C5</code>、<code>YOUPIN</code>、<code>HALOSKINS</code>。</td></tr>
+          <tr><td><code>platformList[].itemId</code></td><td>string</td><td>该物品在对应平台上的 ID。</td></tr>
         </tbody>
       </table>
 
-      <h4 data-i18n="cs2_items.doc_python_example">Python Example</h4>
+      <h4>Python 使用示例</h4>
       <pre><code>import requests
 
 CACHE_URL = "https://steamauto.jiajiaxd.com/file/cache?key=cs2_base_info"
@@ -460,6 +506,7 @@ payload = resp.json()
 
 items = payload["data"]
 
+# 建立两个常用索引：按 Hashname 查、按 BUFF ID 查
 by_hashname = {}
 by_buff_id = {}
 
@@ -487,51 +534,39 @@ for item in items:
     if buff_id:
         by_buff_id[buff_id] = row
 
-# Example queries
+# 示例查询
 print(by_hashname.get("AWP | Pit Viper (Minimal Wear)"))
 print(by_buff_id.get("34123"))</code></pre>
     </div>
   </div>
 </div>
 
-<script type="module">
-  import { initI18n, getLang, t } from '/src/utils/i18n.js';
 
-  initI18n();
-
-  const langToggle = document.getElementById('lang-toggle');
-  if (langToggle) {
-    const langMenu = document.getElementById('lang-menu');
-    const currentLangEl = document.getElementById('current-lang');
-    if (currentLangEl) currentLangEl.textContent = getLang() === 'zh' ? '中文' : 'English';
-    langToggle.addEventListener('click', (e) => { e.stopPropagation(); langMenu.classList.toggle('hidden'); });
-    document.addEventListener('click', () => langMenu.classList.add('hidden'));
-  }
+<script>
+(() => {
+  'use strict';
 
   const CACHE_URL = 'https://steamauto.jiajiaxd.com/file/cache?key=cs2_base_info';
   const ROW_H = 42;
   const BUFFER = 18;
 
   const columns = [
-    { key: 'name', labelKey: 'cs2_items.columns.name', width: 330, type: 'text' },
-    { key: 'marketHashName', labelKey: 'cs2_items.columns.hashname', width: 390, type: 'text' },
-    { key: 'BUFF', labelKey: 'cs2_items.columns.buff_id', width: 105, type: 'num' },
-    { key: 'C5', labelKey: 'cs2_items.columns.c5_id', width: 95, type: 'num' },
-    { key: 'YOUPIN', labelKey: 'cs2_items.columns.youpin_id', width: 108, type: 'num' },
-    { key: 'HALOSKINS', labelKey: 'cs2_items.columns.haloskins_id', width: 120, type: 'num' }
+    { key: 'name', label: '中文名', width: 330, type: 'text' },
+    { key: 'marketHashName', label: 'Hashname', width: 390, type: 'text' },
+    { key: 'BUFF', label: 'BUFF ID', width: 105, type: 'num' },
+    { key: 'C5', label: 'C5 ID', width: 95, type: 'num' },
+    { key: 'YOUPIN', label: 'YOUPIN ID', width: 108, type: 'num' },
+    { key: 'HALOSKINS', label: 'HALOSKINS ID', width: 120, type: 'num' },
+    { key: 'platformSummary', label: '平台映射', width: 300, type: 'text' }
   ];
 
   const $ = id => document.getElementById(id);
   const els = {
-    reloadBtn: $('reloadBtn'), docBtn: $('docBtn'), exportBtn: $('exportBtn'),
-    search: $('search'), platformFilter: $('platformFilter'), resetBtn: $('resetBtn'),
-    totalCount: $('totalCount'), resultCount: $('resultCount'),
-    buffCount: $('buffCount'), c5Count: $('c5Count'), youpinCount: $('youpinCount'), haloCount: $('haloCount'),
-    sortInfo: $('sortInfo'),
-    loadTitle: $('loadTitle'), loadingIndicator: $('loadingIndicator'), loadingText: $('loadingText'), loadDesc: $('loadDesc'),
-    status: $('status'), progress: $('progress'), progressBar: $('progressBar'), fitBtn: $('fitBtn'),
-    viewport: $('viewport'), empty: $('empty'), table: $('table'), headRow: $('headRow'), bodyRows: $('bodyRows'),
-    rangeInfo: $('rangeInfo'), toast: $('toast'),
+    reloadBtn: $('reloadBtn'), docBtn: $('docBtn'), exportBtn: $('exportBtn'), search: $('search'), platformFilter: $('platformFilter'),
+    resetBtn: $('resetBtn'), totalCount: $('totalCount'), resultCount: $('resultCount'),
+    buffCount: $('buffCount'), c5Count: $('c5Count'), youpinCount: $('youpinCount'), haloCount: $('haloCount'), sortInfo: $('sortInfo'),
+    loadTitle: $('loadTitle'), loadingIndicator: $('loadingIndicator'), loadingText: $('loadingText'), loadDesc: $('loadDesc'), status: $('status'), progress: $('progress'), progressBar: $('progressBar'), fitBtn: $('fitBtn'),
+    viewport: $('viewport'), empty: $('empty'), table: $('table'), headRow: $('headRow'), bodyRows: $('bodyRows'), rangeInfo: $('rangeInfo'), toast: $('toast'),
     docModal: $('docModal'), closeDocModal: $('closeDocModal')
   };
 
@@ -540,7 +575,7 @@ print(by_buff_id.get("34123"))</code></pre>
     counts: { BUFF: 0, C5: 0, YOUPIN: 0, HALOSKINS: 0 }
   };
 
-  const fmtInt = n => Number(n || 0).toLocaleString(getLang() === 'zh' ? 'zh-CN' : 'en-US');
+  const fmtInt = n => Number(n || 0).toLocaleString('zh-CN');
   const clean = v => v === undefined || v === null ? '' : String(v);
   const esc = s => clean(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[ch]));
   const escAttr = s => esc(s).replace(/'/g, '&#39;');
@@ -567,7 +602,7 @@ print(by_buff_id.get("34123"))</code></pre>
     if (root && Array.isArray(root.data)) return root.data;
     if (root && root.data && Array.isArray(root.data.items)) return root.data.items;
     if (root && Array.isArray(root.items)) return root.items;
-    throw new Error('Cannot parse cache: no data/items array found');
+    throw new Error('无法识别缓存结构：未找到 data / items 数组');
   }
 
   function normalizeItem(item, index) {
@@ -585,11 +620,13 @@ print(by_buff_id.get("34123"))</code></pre>
       BUFF: platformMap.BUFF || '',
       C5: platformMap.C5 || '',
       YOUPIN: platformMap.YOUPIN || '',
-      HALOSKINS: platformMap.HALOSKINS || ''
+      HALOSKINS: platformMap.HALOSKINS || '',
+      platformSummary: Object.entries(platformMap).map(([k, v]) => `${k}:${v}`).join(' | ')
     };
-    row._search = [row.name, row.marketHashName, row.BUFF, row.C5, row.YOUPIN, row.HALOSKINS].join(' ').toLowerCase();
+    row._search = [row.name, row.marketHashName, row.BUFF, row.C5, row.YOUPIN, row.HALOSKINS, row.platformSummary].join(' ').toLowerCase();
     return row;
   }
+
 
   function setLoadingVisual(show, text = '') {
     els.loadingIndicator.style.display = show ? 'flex' : 'none';
@@ -600,14 +637,14 @@ print(by_buff_id.get("34123"))</code></pre>
 
   async function fetchJsonWithTimeout(url, timeoutMs, requestId) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(new Error('Timeout ' + Math.round(timeoutMs / 1000) + 's')), timeoutMs);
+    const timer = setTimeout(() => controller.abort(new Error('请求超过 ' + Math.round(timeoutMs / 1000) + ' 秒')), timeoutMs);
     try {
       const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
-      if (requestId !== state.loadRequestId) throw new Error('Superseded');
+      if (requestId !== state.loadRequestId) throw new Error('本次加载已被新的请求取代');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return await res.json();
     } catch (err) {
-      if (err && err.name === 'AbortError') throw new Error('Timeout ' + Math.round(timeoutMs / 1000) + 's');
+      if (err && err.name === 'AbortError') throw new Error('请求超过 ' + Math.round(timeoutMs / 1000) + ' 秒');
       throw err;
     } finally {
       clearTimeout(timer);
@@ -620,17 +657,18 @@ print(by_buff_id.get("34123"))</code></pre>
     const timeoutMs = 30000;
 
     showProgress(true, 10);
-    setLoadingVisual(true, retryCount ? `Retry #${retryCount}...` : t('cs2_items.loading_hint'));
-    els.loadTitle.textContent = retryCount ? 'Retrying...' : t('cs2_items.loading');
+    setLoadingVisual(true, retryCount ? `正在自动重试第 ${retryCount} 次...` : '正在请求远程缓存...');
+    els.loadTitle.textContent = retryCount ? '正在重试加载数据' : '正在加载数据';
+    setStatus((retryCount ? `正在自动重试第 ${retryCount} 次：` : '正在请求远程缓存：') + '超过 30 秒会自动重试。');
     els.empty.style.display = 'flex';
-    els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>${retryCount ? `Retry #${retryCount}...` : t('cs2_items.loading_dict')}</strong><span>${t('cs2_items.retry_hint')}</span></div>`;
+    els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>${retryCount ? `正在自动重试第 ${retryCount} 次...` : '正在加载物品字典数据...'}</strong><span>如果本次请求超过 30 秒未完成，页面会自动重试。</span></div>`;
     els.table.style.display = 'none';
 
     try {
       const root = await fetchJsonWithTimeout(CACHE_URL, timeoutMs, requestId);
       if (requestId !== state.loadRequestId) return;
       showProgress(true, 70);
-      setLoadingVisual(true, 'Parsing data...');
+      setLoadingVisual(true, '缓存已返回，正在解析数据...');
       const items = extractItems(root);
       state.raw = items;
       state.rows = items.map(normalizeItem);
@@ -644,9 +682,9 @@ print(by_buff_id.get("34123"))</code></pre>
       state.sortKey = '';
       state.sortDir = 'asc';
       showProgress(false);
-      setLoadingVisual(false, `${fmtInt(state.rows.length)} items loaded.`);
-      els.loadTitle.textContent = 'Loaded';
-      setStatus(`Loaded: <b class="good">${fmtInt(state.rows.length)}</b> items.`);
+      setLoadingVisual(false, `已读取 ${fmtInt(state.rows.length)} 个物品。`);
+      els.loadTitle.textContent = '加载成功';
+      setStatus(`加载成功：共 <b class="good">${fmtInt(state.rows.length)}</b> 个物品。`);
       els.empty.style.display = 'none';
       els.table.style.display = 'table';
       updateStats();
@@ -655,23 +693,25 @@ print(by_buff_id.get("34123"))</code></pre>
     } catch (err) {
       if (requestId !== state.loadRequestId) return;
       const message = err && err.message ? err.message : String(err);
-      const shouldRetry = message.includes('Timeout') || message.includes('timeout');
+      const shouldRetry = message.includes('30 秒') || message.includes('超过 30 秒') || message.includes('请求超过');
       if (shouldRetry) {
         showProgress(true, 15);
-        els.loadTitle.textContent = 'Timeout, retrying...';
-        setLoadingVisual(true, `Retry #${retryCount + 1}...`);
-        els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>Timeout</strong><span>Retry #${retryCount + 1}...</span></div>`;
+        els.loadTitle.textContent = '加载超时，正在自动重试';
+        setLoadingVisual(true, `第 ${retryCount + 1} 次重试即将开始...`);
+        setStatus(`加载超过 30 秒，正在自动重试第 <b>${retryCount + 1}</b> 次...`, 'warn');
+        els.empty.innerHTML = `<div class="loading-empty"><span class="spinner large" aria-hidden="true"></span><strong>加载超过 30 秒</strong><span>正在自动重试第 ${retryCount + 1} 次...</span></div>`;
         setTimeout(() => {
           if (requestId === state.loadRequestId) loadData({ retryCount: retryCount + 1 });
         }, 600);
         return;
       }
+
       showProgress(false);
       setLoadingVisual(false, message);
-      els.loadTitle.textContent = 'Failed';
-      setStatus('Failed: ' + esc(message), 'bad');
+      els.loadTitle.textContent = '加载失败';
+      setStatus('加载失败：' + esc(message), 'bad');
       els.empty.style.display = 'flex';
-      els.empty.textContent = 'Load failed. Check cache URL or browser console.';
+      els.empty.textContent = '加载失败，请检查缓存链接或浏览器控制台。';
     }
   }
 
@@ -683,14 +723,14 @@ print(by_buff_id.get("34123"))</code></pre>
     els.youpinCount.textContent = fmtInt(state.counts.YOUPIN);
     els.haloCount.textContent = fmtInt(state.counts.HALOSKINS);
     const col = columns.find(c => c.key === state.sortKey);
-    els.sortInfo.textContent = state.sortKey ? `${t(col ? col.labelKey : state.sortKey)} ${state.sortDir === 'desc' ? '↓' : '↑'}` : '-';
+    els.sortInfo.textContent = state.sortKey ? `${col ? col.label : state.sortKey} ${state.sortDir === 'desc' ? '↓' : '↑'}` : '无';
   }
 
   function renderHeader() {
     els.headRow.innerHTML = '';
     for (const col of columns) {
       const th = document.createElement('th');
-      th.textContent = t(col.labelKey) + (state.sortKey === col.key ? (state.sortDir === 'desc' ? ' ↓' : ' ↑') : '');
+      th.textContent = col.label + (state.sortKey === col.key ? (state.sortDir === 'desc' ? ' ↓' : ' ↑') : '');
       th.style.width = col.width + 'px';
       th.dataset.key = col.key;
       th.addEventListener('click', () => sortBy(col.key));
@@ -719,7 +759,7 @@ print(by_buff_id.get("34123"))</code></pre>
       els.viewport.scrollTop = 0;
       updateStats();
       requestRender(true);
-      setStatus(`${fmtInt(state.filtered.length)} / ${fmtInt(state.rows.length)} items.`);
+      setStatus(`当前结果：<b>${fmtInt(state.filtered.length)}</b> / ${fmtInt(state.rows.length)} 个物品。`);
     };
     if (immediate) run();
     else state.filterTimer = setTimeout(run, 150);
@@ -728,7 +768,11 @@ print(by_buff_id.get("34123"))</code></pre>
   function sortBy(key) {
     if (!state.rows.length) return;
     if (state.sortKey === key) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
-    else { state.sortKey = key; state.sortDir = 'asc'; }
+    else {
+      state.sortKey = key;
+      const col = columns.find(c => c.key === key);
+      state.sortDir = col && col.type === 'num' ? 'asc' : 'asc';
+    }
     sortFiltered(true);
     els.viewport.scrollTop = 0;
     renderHeader();
@@ -749,8 +793,9 @@ print(by_buff_id.get("34123"))</code></pre>
       if (eb) return -1;
       const na = Number(va), nb = Number(vb);
       if (Number.isFinite(na) && Number.isFinite(nb)) return (na - nb) * dir;
-      return String(va).localeCompare(String(vb), getLang() === 'zh' ? 'zh-Hans-CN' : 'en', { numeric: true, sensitivity: 'base' }) * dir;
+      return String(va).localeCompare(String(vb), 'zh-Hans-CN', { numeric: true, sensitivity: 'base' }) * dir;
     });
+    if (showStatus) setStatus('排序完成。');
   }
 
   function requestRender(force = false) {
@@ -786,7 +831,7 @@ print(by_buff_id.get("34123"))</code></pre>
     }
     html.push(`<tr class="spacer"><td style="height:${bottomH}px" colspan="${columns.length}"></td></tr>`);
     els.bodyRows.innerHTML = html.join('');
-    els.rangeInfo.textContent = total ? `${fmtInt(start + 1)} - ${fmtInt(end)} / ${fmtInt(total)}` : '-';
+    els.rangeInfo.textContent = total ? `显示 ${fmtInt(start + 1)} - ${fmtInt(end)} / ${fmtInt(total)}` : '无匹配结果';
   }
 
   async function copyText(text) {
@@ -794,7 +839,7 @@ print(by_buff_id.get("34123"))</code></pre>
     if (!value) return;
     try {
       await navigator.clipboard.writeText(value);
-      toast(t('cs2_items.copy_success') + ': ' + value.slice(0, 40));
+      toast('已复制：' + value.slice(0, 40));
     } catch {
       const input = document.createElement('textarea');
       input.value = value;
@@ -802,13 +847,13 @@ print(by_buff_id.get("34123"))</code></pre>
       input.select();
       document.execCommand('copy');
       input.remove();
-      toast(t('cs2_items.copy_success'));
+      toast('已复制');
     }
   }
 
   function exportCsv() {
-    if (!state.filtered.length) return toast('No results to export');
-    const header = columns.map(c => csvCell(t(c.labelKey))).join(',');
+    if (!state.filtered.length) return toast('没有可导出的结果');
+    const header = columns.map(c => csvCell(c.label)).join(',');
     const lines = [header];
     for (const idx of state.filtered) {
       const r = state.rows[idx];
@@ -817,7 +862,7 @@ print(by_buff_id.get("34123"))</code></pre>
     const blob = new Blob(['\ufeff' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'cs2-items-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.download = 'cs2-item-id-dictionary-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-') + '.csv';
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -835,31 +880,35 @@ print(by_buff_id.get("34123"))</code></pre>
     applyFilters(true);
   }
 
-  renderHeader();
-  els.reloadBtn.addEventListener('click', loadData);
-  els.docBtn.addEventListener('click', () => els.docModal.classList.add('show'));
-  els.closeDocModal.addEventListener('click', () => els.docModal.classList.remove('show'));
-  els.docModal.addEventListener('click', e => { if (e.target === els.docModal) els.docModal.classList.remove('show'); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') els.docModal.classList.remove('show'); });
-  els.exportBtn.addEventListener('click', exportCsv);
-  els.search.addEventListener('input', () => applyFilters(false));
-  els.platformFilter.addEventListener('change', () => applyFilters(true));
-  els.resetBtn.addEventListener('click', resetFilters);
-  els.fitBtn.addEventListener('click', () => requestRender(true));
-  els.viewport.addEventListener('scroll', () => requestRender(false));
-  window.addEventListener('resize', () => requestRender(true));
-  els.bodyRows.addEventListener('click', e => {
-    const btn = e.target.closest('.copy');
-    if (btn) copyText(btn.dataset.copy || btn.textContent);
-  });
-  document.querySelectorAll('.chip[data-q]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      els.search.value = btn.dataset.q;
-      applyFilters(true);
+  function wire() {
+    renderHeader();
+    els.reloadBtn.addEventListener('click', loadData);
+    els.docBtn.addEventListener('click', () => els.docModal.classList.add('show'));
+    els.closeDocModal.addEventListener('click', () => els.docModal.classList.remove('show'));
+    els.docModal.addEventListener('click', e => { if (e.target === els.docModal) els.docModal.classList.remove('show'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') els.docModal.classList.remove('show'); });
+    els.exportBtn.addEventListener('click', exportCsv);
+    els.search.addEventListener('input', () => applyFilters(false));
+    els.platformFilter.addEventListener('change', () => applyFilters(true));
+    els.resetBtn.addEventListener('click', resetFilters);
+    els.fitBtn.addEventListener('click', () => requestRender(true));
+    els.viewport.addEventListener('scroll', () => requestRender(false));
+    window.addEventListener('resize', () => requestRender(true));
+    els.bodyRows.addEventListener('click', e => {
+      const btn = e.target.closest('.copy');
+      if (btn) copyText(btn.dataset.copy || btn.textContent);
     });
-  });
+    document.querySelectorAll('.chip[data-q]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        els.search.value = btn.dataset.q;
+        applyFilters(true);
+      });
+    });
+    loadData();
+  }
 
-  loadData();
+  wire();
+})();
 </script>
 </body>
 </html>
