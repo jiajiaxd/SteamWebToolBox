@@ -21,6 +21,11 @@
       "title": "CS2 物品 ID 字典",
       "desc": "查询 CS2 物品在 BUFF、C5、YOUPIN、HALOSKINS 等平台的 ID。",
       "tag": "交易"
+    },
+    "other_projects_title": "作者其他项目",
+    "steamauto": {
+      "desc": "免费开源的网易BUFF、悠悠有品、ECOSteam、C5Game、Steam 全自动收发货解决方案。支持自动发货、自动上架、改价同步及多渠道消息推送。",
+      "tag": "自动化"
     }
   },
   "steam2fa": {

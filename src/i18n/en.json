@@ -21,6 +21,11 @@
       "title": "CS2 Item ID Dictionary",
       "desc": "Lookup CS2 item IDs across BUFF, C5, YOUPIN, HALOSKINS and more platforms.",
       "tag": "Trading"
+    },
+    "other_projects_title": "Other Projects",
+    "steamauto": {
+      "desc": "Free, open-source auto-delivery solution for BUFF, UUYouPin, ECOSteam, C5Game and Steam. Supports auto-accept offers, auto-list items, price sync and push notifications.",
+      "tag": "Automation"
     }
   },
   "steam2fa": {

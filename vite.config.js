@@ -8,8 +8,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        steam2fa: resolve(__dirname, 'src/pages/steam2fa.html'),
-        'cs2-items': resolve(__dirname, 'src/pages/cs2-items.html'),
+        steam2fa: resolve(__dirname, 'tool/steam2fa.html'),
+        'cs2-items': resolve(__dirname, 'tool/cs2-items.html'),
       },
     },
   },
